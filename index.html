@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="starbackground" width="2000" height="2000">
+
+    </canvas>
+</body>
+<script>
+    const canvas = window.document.getElementById("starbackground");
+    canvas.width = window.outerWidth;
+    canvas.height = window.outerHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.strokeStyle = "white";
+    ctx.fillColor = "white";
+    let flakes = [];
+
+    function drawFlakes(factorY,factorX){
+      ctx.clearRect(0,0,canvas.width,canvas.height)
+      ctx.strokeStyle = "white";
+      ctx.fillColor = "white";
+      flakes.forEach((element)=>{
+        ctx.beginPath();
+        const x =Math.floor((element[1]+100 *(factorX*0.01))*1000)/1000;
+        const y = Math.floor((element[0]+ 100 *(factorY*0.01))*1000)/1000;
+        ctx.arc(x,y,Math.floor(Math.random()*50)/25,0,2*Math.PI,false);
+        ctx.stroke();
+      })
+    }
+
+    const centerY = window.outerHeight/2;
+    const centerX = window.outerWidth/2;
+    const pixels = window.outerHeight * window.outerWidth;
+    const amountflakes = pixels * 0.0002 * 4;
+
+    for (let i = 0; i < Math.floor(amountflakes);i++) { 
+      const randX = Math.floor(Math.random()* window.outerWidth *2) - window.outerWidth;
+      const randY = Math.floor(Math.random()* window.outerHeight *2) - window.outerHeight;
+      const flakeTurple = [randY,randX];
+      if (!flakes.includes(flakeTurple)) {
+        let s = true;
+        flakes.forEach((element) => {
+          if(Math.sqrt(Math.pow(element[0]-randY,2)+Math.pow(element[1]-randX,2)) <= 5){
+            s= false;
+          }
+        })
+        if(s) {
+          flakes.push(flakeTurple);
+        }
+      }
+    }
+    drawFlakes(0,0);
+    console.log(amountflakes,flakes.length)
+    window.addEventListener("mousemove",(event) => {
+      const deltaX = event.clientX;
+      const deltaY = event.clientY;
+      drawFlakes(Math.floor(deltaY),Math.floor(deltaX));
+    });
+</script>
+<style>
+    body {
+      margin: 0;
+    }
+    canvas{
+        background-color: black;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+</html>
