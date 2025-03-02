@@ -18,18 +18,18 @@
     ctx.strokeStyle = "white";
     ctx.fillColor = "white";
     let flakes = [];
-    const r = 4;
+    const r = 1.8;
 
     function drawFlakes(factorY,factorX){
       ctx.clearRect(0,0,canvas.width,canvas.height)
       ctx.strokeStyle = "white";
-      ctx.fillColor = "white";
+      ctx.fillStyle = "white";
       flakes.forEach((element)=>{
         ctx.beginPath();
         const x =Math.floor(element[1]+ r*100 *(factorX*0.01));
         const y = Math.floor(element[0]+ r*100 *(factorY*0.01));
-        ctx.arc(x,y,Math.floor(Math.random()*50)/25,0,2*Math.PI,false);
-        ctx.stroke();
+        ctx.arc(x,y,Math.floor(Math.random()*100)/40,0,2*Math.PI,false);
+        ctx.fill()
       })
     }
     const pixels = window.outerHeight * window.outerWidth;
