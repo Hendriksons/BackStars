@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="starbackground" width="2000" height="2000">
+    <canvas id="starbackground" width="1" height="1">
 
     </canvas>
 </body>
@@ -18,6 +18,7 @@
     ctx.strokeStyle = "white";
     ctx.fillColor = "white";
     let flakes = [];
+    const r = 4;
 
     function drawFlakes(factorY,factorX){
       ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -25,34 +26,26 @@
       ctx.fillColor = "white";
       flakes.forEach((element)=>{
         ctx.beginPath();
-        const x =Math.floor((element[1]+100 *(factorX*0.01))*1000)/1000;
-        const y = Math.floor((element[0]+ 100 *(factorY*0.01))*1000)/1000;
+        const x =Math.floor(element[1]+ r*100 *(factorX*0.01));
+        const y = Math.floor(element[0]+ r*100 *(factorY*0.01));
         ctx.arc(x,y,Math.floor(Math.random()*50)/25,0,2*Math.PI,false);
         ctx.stroke();
       })
     }
-
-    const centerY = window.outerHeight/2;
-    const centerX = window.outerWidth/2;
     const pixels = window.outerHeight * window.outerWidth;
-    const amountflakes = pixels * 0.0002 * 4;
+    const amountflakes = pixels * 0.00015 * Math.pow(r*2,2);
+    function makeStars() {
 
-    for (let i = 0; i < Math.floor(amountflakes);i++) { 
-      const randX = Math.floor(Math.random()* window.outerWidth *2) - window.outerWidth;
-      const randY = Math.floor(Math.random()* window.outerHeight *2) - window.outerHeight;
-      const flakeTurple = [randY,randX];
-      if (!flakes.includes(flakeTurple)) {
-        let s = true;
-        flakes.forEach((element) => {
-          if(Math.sqrt(Math.pow(element[0]-randY,2)+Math.pow(element[1]-randX,2)) <= 5){
-            s= false;
-          }
-        })
-        if(s) {
+      for (let i = 0; i < Math.floor(amountflakes);i++) { 
+        const randX = Math.floor(Math.random()* window.outerWidth *r*2) - window.outerWidth*r;
+        const randY = Math.floor(Math.random()* window.outerHeight *r*2) - window.outerHeight*r;
+        const flakeTurple = [randY,randX];
+        if (!flakes.includes(flakeTurple)) {
           flakes.push(flakeTurple);
         }
       }
     }
+    makeStars();
     drawFlakes(0,0);
     console.log(amountflakes,flakes.length)
     window.addEventListener("mousemove",(event) => {
@@ -60,15 +53,21 @@
       const deltaY = event.clientY;
       drawFlakes(Math.floor(deltaY),Math.floor(deltaX));
     });
+    window.addEventListener("resize", (event)=>{
+      canvas.width = window.outerWidth;
+      canvas.height = window.outerHeight;
+      makeStars();
+    })
 </script>
 <style>
     body {
+      overflow: hidden;
       margin: 0;
     }
     canvas{
         background-color: black;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
     }
 </style>
 </html>
