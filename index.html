@@ -16,38 +16,37 @@
     canvas.height = window.outerHeight;
     const ctx = canvas.getContext("2d");
     ctx.strokeStyle = "white";
-    ctx.fillColor = "white";
+    ctx.fillStyle = "white";
     let flakes = [];
     const r = 1.8;
+    const amountflakes = window.outerHeight * window.outerWidth * 0.00015;
 
     function drawFlakes(factorY,factorX){
       ctx.clearRect(0,0,canvas.width,canvas.height)
-      ctx.strokeStyle = "white";
-      ctx.fillStyle = "white";
       flakes.forEach((element)=>{
         ctx.beginPath();
-        const x =Math.floor(element[1]+ r*100 *(factorX*0.01));
-        const y = Math.floor(element[0]+ r*100 *(factorY*0.01));
-        ctx.arc(x,y,Math.floor(Math.random()*100)/40,0,2*Math.PI,false);
+        const x =Math.floor(element[1]+ r*100 *(factorX*0.01)) % canvas.width;
+        const y = Math.floor(element[0]+ r*100 *(factorY*0.01)) % canvas.height;
+        ctx.arc(x,y,element[2],0,2*Math.PI,false);
         ctx.fill()
       })
     }
-    const pixels = window.outerHeight * window.outerWidth;
-    const amountflakes = pixels * 0.00015 * Math.pow(r*2,2);
-    function makeStars() {
 
+    function makeStars() {
       for (let i = 0; i < Math.floor(amountflakes);i++) { 
-        const randX = Math.floor(Math.random()* window.outerWidth *r*2) - window.outerWidth*r;
-        const randY = Math.floor(Math.random()* window.outerHeight *r*2) - window.outerHeight*r;
-        const flakeTurple = [randY,randX];
+        const randX = Math.floor(Math.random()* window.outerWidth);
+        const randY = Math.floor(Math.random()* window.outerHeight);
+        //const randRad = Math.floor(Math.random()*100)/40;
+        const newrandRad = (1/Math.pow((Math.random()+1.2),10))*12 +1;
+        const flakeTurple = [randY,randX,newrandRad];
         if (!flakes.includes(flakeTurple)) {
           flakes.push(flakeTurple);
         }
       }
     }
+
     makeStars();
     drawFlakes(0,0);
-    console.log(amountflakes,flakes.length)
     window.addEventListener("mousemove",(event) => {
       const deltaX = event.clientX;
       const deltaY = event.clientY;
@@ -58,6 +57,9 @@
       canvas.height = window.outerHeight;
       makeStars();
     })
+    window.addEventListener("touchmove", (event)=> {
+      drawFlakes(event.changedTouches[0].clientY,event.changedTouches[0].clientX)
+    });
 </script>
 <style>
     body {
