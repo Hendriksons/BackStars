@@ -20,6 +20,7 @@
     let flakes = [];
     const r = 1.8;
     const amountflakes = window.outerHeight * window.outerWidth * 0.00015;
+    let scroll = 0
 
     function drawFlakes(factorY,factorX){
       ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -27,7 +28,13 @@
         ctx.beginPath();
         const x =Math.floor(element[1]+ r*100 *(factorX*0.01)) % canvas.width;
         const y = Math.floor(element[0]+ r*100 *(factorY*0.01)) % canvas.height;
-        ctx.arc(x,y,element[2],0,2*Math.PI,false);
+        let deltaX = x-canvas.width/2;
+        let deltaY = y-canvas.height/2;
+        //const distanceCenter = Math.sqrt(Math.pow(deltaX,2)+ Math.pow(deltaY,2));
+        const flakeSize =element[2]// + scroll* -1 *10 * Math.pow(distanceCenter,-2);
+        //console.log(flakeSize,element[2],distanceCenter) 
+        //ctx.arc((scroll/100)*(canvas.width/2)+deltaX,(scroll/100)*(canvas.height/2)+deltaY,flakeSize,0,2*Math.PI,false);
+        ctx.arc(x,y,flakeSize,0,2*Math.PI,false);
         ctx.fill()
       })
     }
@@ -60,9 +67,15 @@
     window.addEventListener("touchmove", (event)=> {
       drawFlakes(event.changedTouches[0].clientY,event.changedTouches[0].clientX)
     });
+    window.addEventListener("wheel", (event) => {
+      const localscroll = event.deltaY;
+      scroll += localscroll
+      drawFlakes(event.clientY,event.clientX);
+    });
 </script>
 <style>
     body {
+      cursor: none;
       overflow: hidden;
       margin: 0;
     }
